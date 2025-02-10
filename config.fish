@@ -18,6 +18,14 @@ if status is-interactive
 end
 
 function fish_prompt
-    echo (set_color brgreen)(whoami)@(hostname) (set_color brred)"("(date '+%H:%M:%S')")"
-    echo (set_color adadac)(pwd) (set_color bryellow)"⋊> "
+    set -l prompt ""
+
+    if test "$(git rev-parse --show-toplevel 2>/dev/null)" != ""
+        set -g branch (git branch --show-current)
+        set prompt "$(set_color brmagenta)( $branch) "
+    end
+
+    set -l prompt "$prompt$(set_color brgreen)$(whoami)@$(hostname) $(set_color brred)($(date '+%H:%M:%S'))"
+    echo $prompt
+    echo "$(set_color adadac)$(pwd) $(set_color bryellow)⋊> "
 end
